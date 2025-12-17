@@ -43,12 +43,10 @@ def listen_incoming():
         result, last_index = receive_message(master_key, last_index)
         if result:
             sender, text = result
-
-            if text == "__EXIT__":
+            if text == "EXIT":
                 print(f"{sender} has left the chat.")
                 stop_threads = True
                 break
-
             if sender != MY_ROLE:
                 print(f"\n[Message received] {text}")
         time.sleep(0.2)
@@ -60,7 +58,6 @@ try:
         msg = input(f"[{MY_ROLE}]: ").strip()
         if not msg:
             continue
-
         if msg.lower() == "/exit":
             send_message("", master_key, sender_label=MY_ROLE, is_exit=True)
             print("\n[Chat ended]")
@@ -68,7 +65,6 @@ try:
             if os.path.exists(AES_KEY_FILE):
                 os.remove(AES_KEY_FILE)
             break
-
         send_message(msg, master_key, sender_label=MY_ROLE)
 
 except KeyboardInterrupt:
