@@ -34,7 +34,7 @@ cd Secure_Message
 pip install pycryptodome
 ```
 ## Project Structure
-
+```
 Secure_Message/
 ├── src/
 │   ├── main.py
@@ -47,7 +47,7 @@ Secure_Message/
     ├── keys/
     └── messages/
 
-
+```
 ## Usage
 
 - Start the chat (User1)
