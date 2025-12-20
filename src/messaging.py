@@ -1,6 +1,5 @@
 from aes_crypto import aes_encrypt, aes_decrypt
 from utils import save_message, load_all_messages
-import time
 
 
 def send_message(text, key, sender_label="Sender", is_exit=False):

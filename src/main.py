@@ -1,32 +1,35 @@
 import os
 import time
 import threading
-from rsa_crypto import ensure_rsa_keys, load_key, rsa_encrypt
+from rsa_crypto import ensure_rsa_keys, load_key, rsa_encrypt, rsa_decrypt, RECEIVER_PRIV, RECEIVER_PUB
 from aes_crypto import generate_aes_key
 from messaging import send_message, receive_message
 from utils import load_all_messages
 
 
+
 KEY_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../data/keys")
 AES_KEY_FILE = os.path.join(KEY_DIR, "session_aes.key")
-RECEIVER_PUB_FILE = os.path.join(KEY_DIR, "receiver_public.pem")
+
 
 ensure_rsa_keys()
 
 if not os.path.exists(AES_KEY_FILE):
     master_key = generate_aes_key()
-    receiver_pub = load_key(RECEIVER_PUB_FILE)
+    receiver_pub = load_key(RECEIVER_PUB)
     encrypted_aes = rsa_encrypt(master_key, receiver_pub)
 
     with open(AES_KEY_FILE, "wb") as f:
-        f.write(master_key)
+        f.write(encrypted_aes)
 
     MY_ROLE = "User1"
     OTHER_ROLE = "User2"
     print("[AES] New session key created.")
 else:
     with open(AES_KEY_FILE, "rb") as f:
-        master_key = f.read()
+        encrypted_aes = f.read()
+    receiver_priv = load_key(RECEIVER_PRIV)
+    master_key = rsa_decrypt(encrypted_aes, receiver_priv)
 
     MY_ROLE = "User2"
     OTHER_ROLE = "User1"
